@@ -1,0 +1,68 @@
+# token=代幣 金鑰(放存取權杖)
+token = 'EAAEbChzDyz0BANeyWyWsvcZA6Qdj3w7Npvisr6Lqs049j23tomkwUrUpQtd0mLa3yraHQSU6s9s8vPtZCy2aSErmxKCuxKIt9C4BbZAHhuqZBT9CtVnN0UUGMbPjWurGJfjdpLafW2fDC0Uj7O8F0P0W3sXaEhoCgi3c9ONzJOP0DsrErkPuAnJFM19NohHi2esZBnXNOFfZC8e8mmCZAMus1XVjApjyZAMZD'
+
+# 引入 [requests 模組]網頁請求
+# 引入 [json 模組]數據交換格式
+# 引入 [jieba 模組]中文分詞
+# 引入 [operator 模組]操作函數
+import requests
+import json
+import jieba
+import operator
+
+corpus = []
+
+# 使用 [GET 請求函數]方式下載 FB Host URL主機位置/路徑?補述語法
+data = requests.get('https://graph.facebook.com/me/posts?limit=100&since=946656000&access_token=' + token)
+
+# 伺服器回應的狀態碼[200為請求已成功]
+# 打印出網頁 HTML 原始碼
+# print(data)
+# print(data.text)
+
+# JSON = 資料表示的型式/資料交換語言/JavaScript物件表示法 
+# 將json字符串解碼為Python對象，並輸出網頁 HTML 中文原始碼
+jd = json.loads(data.text)
+
+# 打印出jd裡面的data第一項的message
+# print(jd['data'][0]['message'])
+
+# 使用[for 序列循環/計數器迴圈/循環變量/固定數量的變數]找出message
+# for post in jd['data']:
+#     if 'message' in post:
+#         print(post['message'])
+
+# 使用[while 條件循環/判斷循環/判斷條件成不成立]找出message
+# 使用[for]找出message
+# 使用[cut 切割函數]分詞
+# 使用[GET 請求函數]下一頁
+# 將json字符串解碼為Python對象，並輸出網頁 HTML 中文原始碼
+while 'paging' in jd:
+    for post in jd['data']:
+        if 'message' in post:
+            corpus += jieba.cut(post['message'])
+    data = requests.get(jd['paging']['next'])
+    jd = json.loads(data.text)
+# print(corpus)
+
+# 使用[for]找出corpus
+# 打印出成直列
+# for ele in corpus:
+#    print(ele)
+
+# 指定dic變數為空dic字典型態{}
+# for迴圈尋找
+# if左列為dic字典型態並回拋右列值1
+# else否則為
+dic = {}
+for ele in corpus:
+    if ele not in dic:
+        dic[ele]=1
+    else:
+        dic[ele]=dic[ele]+1
+
+# [itemgetter 獲取對曲維度數據]序列
+sorted_word = sorted(dic.items(),key = operator.itemgetter(1), reverse = True)
+for ele in sorted_word:
+    if len(ele[0])>=2:
+        print(ele[0],ele[1])
