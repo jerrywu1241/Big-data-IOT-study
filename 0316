@@ -1,0 +1,14 @@
+import random
+random.randint(1,6)
+
+import random
+c=0
+while c<3:
+    num=random.randint(1,6)
+    print(num)
+    if num==5:
+        print("lose")
+        break
+    c+=1
+else:
+    print("win")
