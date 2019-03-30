@@ -1,0 +1,22 @@
+# 引入 [requests 模組]網頁請求
+# 引入 bs4第四版 BeautifulSoup 網頁解析模組
+import requests
+from bs4 import BeautifulSoup
+
+#res=使用 [GET 請求函數]方式下載(目標網頁)
+#soup=網頁 HTML 原始碼
+res = requests.get('https://www.1111.com.tw/job-bank/job-index.asp?si=1&ss=s&ks=%E5%A4%A7%E6%95%B8%E6%93%9A&page=1')
+soup = BeautifulSoup(res.text)
+
+#使用[for 序列循環/計數器迴圈/循環變量/固定數量的變數]找出li職缺
+    #type轉為str且如果字串不等於class 'NoneType'請打印出來
+    #if 字串li.a為屬性NoneType
+    #if li.a href連結給予分割 並切分隔完 第五個字串為""空字串時
+    #res2=li.a['href']的上https:使其變成超連結
+    #soup2=
+for li in soup.select('.halfbox')[0].select('li'):
+    if str(type(li.a))!= "<class 'NoneType'>":
+        if li.a['href'].split('/')[5] == "":
+            res2 = requests.get('https:' + li.a['href'])
+            soup2 = BeautifulSoup(res2.text)
+            print(soup2.h1.string,soup2.select('.logoSubTitle')[0].string)
