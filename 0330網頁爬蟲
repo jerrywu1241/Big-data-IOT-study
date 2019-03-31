@@ -3,21 +3,29 @@
 import requests
 from bs4 import BeautifulSoup
 
-#res=使用 [GET 請求函數]方式下載(目標網頁)
-#soup=網頁 HTML 原始碼
+# 使用 [GET 請求函數]方式下載 1111 Host URL主機位置(搜尋1111大數據找工作 結果後的網頁)
+#soup變數 為網頁 HTML 原始碼轉為python語法
 res = requests.get('https://www.1111.com.tw/job-bank/job-index.asp?si=1&ss=s&ks=%E5%A4%A7%E6%95%B8%E6%93%9A&page=1')
 soup = BeautifulSoup(res.text)
 
-#使用[while 條件循環/判斷循環/判斷條件成不成立]尋找目標不等於[]
-    #使用[for 序列循環/計數器迴圈/循環變量/固定數量的變數]找出li職缺
-        #if type轉為str且如果字串li.a不等於屬性class 'NoneType'時
-            #if li.a href連結給予分割 並切分隔完 第五個字串為""空字串時
-                #res2=li.a['href']加上https:使其變成超連結
-                #soup2=網頁 HTML 原始碼
-                #if 字串
-                
-                #打印職缺名與副標題
+#while true: = 條件循環/判斷循環/判斷條件成不成立
+#for item in mylist: = 序列循環/計數器迴圈/循環變量/固定數量的變數
+#select() = 找出 select搜尋全部符合的...標籤並回傳
+#if true: = 假如敘述句成立...則做下一行執行句...
 
+#使用[ while 條件循環]尋找 begin標籤 不等於[]時
+    #使用[ for 序列循環] select搜尋全部的 halfbox標籤 並回傳第0個資料完在做 select搜尋全部的 li標籤 在使用 for 找出 li職缺標籤
+        #if type轉為str 且如果字串 li.a 不等於屬性 class 'NoneType'時
+            #if li標籤中的 a標籤的 href超連結完後 遇到 /時 給予分割字串完 撈取第五個字串 相等於""空字串時
+                #res2變數為 [GET 請求函數]方式下載 取出 (職缺點進去網頁)(li.a標籤 href連結 加上https:使其變成超連結)
+                #soup2變數為 網頁 HTML 原始碼轉為python語法 (職缺點進去網頁)
+                #if type轉為str且如果字串 select搜尋全部的 listContent標籤 並回傳第0個資料完在做 a標籤 不等於屬性class 'NoneType'時
+                    #soup2標籤 做select搜尋全部的 listContent標籤 並回傳第0個資料完在做 a標籤 的元素取出
+                #打印出工作地 (soup2標籤 做select搜尋全部的 listContent標籤 並回傳第0個資料完在做 的str字串型態)
+
+                #打印出職缺與薪資 (soup2變數中的h1標籤的str字串型態 以及 select搜尋全部的 logoSubTitle標籤 並回傳第0個資料完的str字串型態)
+    #res變數為 [GET 請求函數]方式下載 取出 (職缺點進去網頁的下一頁)
+    #soup變數 為網頁 HTML 原始碼 (職缺點進去網頁的下一頁)
 while soup.select('.begin') != []:
     for li in soup.select('.halfbox')[0].select('li'):
         if str(type(li.a))!= "<class 'NoneType'>":
@@ -27,7 +35,7 @@ while soup.select('.begin') != []:
                 if str(type(soup2.select('.listContent')[0].a)) != "<class 'NoneType'>":
                     soup2.select('.listContent')[0].a.extract()
                 print(soup2.select('.listContent')[0].string)
-                
+
                 print(soup2.h1.string,soup2.select('.logoSubTitle')[0].string)
-    res = requests.get('https://www.1111.com.tw/job-bank/job-index.asp'+soup.select('.begin')[0]['href'])
-    soup = BeautifulSoup(res.text)     
+    res = requests.get('https://www.1111.com.tw/job-bank/job-index.asp' + soup.select('.begin')[0]['href'])
+    soup = BeautifulSoup(res.text)
